@@ -1,8 +1,7 @@
-
 "use client";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Package, Home, ShoppingCart, PanelLeft, Scissors } from 'lucide-react';
+import { Package, Home, ShoppingCart, PanelLeft, Scissors, Store, ShoppingBag } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -13,6 +12,7 @@ const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
   { name: 'Produtos', href: '/products', icon: Package },
   { name: 'Vendas', href: '/sales', icon: ShoppingCart },
+  { name: 'Loja', href: '/store', icon: Store },
 ];
 
 export function Header() {
@@ -39,7 +39,7 @@ export function Header() {
                 href={item.href}
                 className={cn(
                   'mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground',
-                  { 'bg-muted text-foreground': pathname === item.href }
+                  { 'bg-muted text-foreground': pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/') }
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -50,6 +50,12 @@ export function Header() {
         </SheetContent>
       </Sheet>
       <div className="w-full flex-1" />
+       <Button variant="ghost" size="icon" className="rounded-full relative" asChild>
+          <Link href="/cart">
+            <ShoppingBag className="h-5 w-5" />
+            <span className="sr-only">Carrinho de Compras</span>
+          </Link>
+      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">

@@ -2,7 +2,7 @@
 'use server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { addProduct, recordSale } from '@/lib/data';
+import { addProduct, recordSale, getProductById } from '@/lib/data';
 import { generateProductDescription } from '@/ai/flows/generate-product-description';
 import { generateStockLevelAlertWithSuggestions } from '@/ai/flows/stock-level-alert-with-suggestions';
 
@@ -22,6 +22,7 @@ export async function createProductAction(formData) {
 
   await addProduct(productData);
   revalidatePath('/products');
+  revalidatePath('/store');
   redirect('/products');
 }
 
@@ -75,5 +76,29 @@ export async function createSaleAction(previousState, formData) {
   revalidatePath('/sales');
   revalidatePath('/');
   revalidatePath('/products');
+  revalidatePath('/store');
   redirect('/sales');
+}
+
+export async function checkoutAction(cart) {
+    // In a real app, this would process payment and create an order.
+    // For now, we'll just simulate it by creating sales records.
+    for (const item of Object.values(cart)) {
+        const saleData = {
+            productId: item.id,
+            quantity: item.quantity,
+        };
+        try {
+            await recordSale(saleData);
+        } catch (error) {
+            // We could collect these errors and show them to the user
+            console.error(`Could not process sale for product ${item.id}: ${error.message}`);
+        }
+    }
+
+    revalidatePath('/sales');
+    revalidatePath('/');
+    revalidatePath('/products');
+    revalidatePath('/store');
+    redirect('/checkout/success');
 }

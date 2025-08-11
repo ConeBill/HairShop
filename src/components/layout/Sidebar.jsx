@@ -1,14 +1,14 @@
-
 "use client";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Package, Home, ShoppingCart, Scissors } from 'lucide-react';
+import { Package, Home, ShoppingCart, Scissors, Store } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
   { name: 'Produtos', href: '/products', icon: Package },
   { name: 'Vendas', href: '/sales', icon: ShoppingCart },
+  { name: 'Loja', href: '/store', icon: Store },
 ];
 
 export function Sidebar() {
@@ -32,7 +32,7 @@ export function Sidebar() {
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
                   {
-                    'bg-muted text-primary': pathname === item.href,
+                    'bg-muted text-primary': pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/'),
                   }
                 )}
               >
